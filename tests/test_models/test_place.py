@@ -89,4 +89,4 @@ class test_Place(test_basemodel):
         new = self.value()
         self.assertEqual(type(new.amenity_ids), list if
                          os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+                         type(None))
