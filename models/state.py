@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 
 class State(BaseModel, Base):
     """ State class / table model"""
-    _tablename_ = 'states'
+    __tablename__ = 'states'
     if storage_type == 'db':
         name = Column(String(128), nullable=False)
         cities = relationship('City', backref='state',
@@ -29,4 +29,4 @@ class State(BaseModel, Base):
             for city in cities.values():
                 if city.state_id == self.id:
                     related_cities.append(city)
-            return related_cities
+            return related_cities
