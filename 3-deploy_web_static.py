@@ -65,4 +65,4 @@ def deploy():
     """Archives and deploys the static files to the host servers.
     """
     archive_path = do_pack()
-    return do_deploy(archive_path) if archive_path else False
+     return do_deploy(archive_path) if archive_path else False
