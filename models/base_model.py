@@ -1,29 +1,77 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
-""" Amenity Module for HBNB project """
+"""This module defines a base class for all models in our hbnb clone"""
+import uuid
+from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, DATETIME
+from models import storage_type
 
-=======
-"""This is the amenity class"""
->>>>>>> parent of 06df725 (models)
-from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String
-from models.place import place_amenity
+Base = declarative_base()
 
 
-class Amenity(BaseModel, Base):
-<<<<<<< HEAD
-    """ Amenity class """
-    __tablename__ = 'amenities'
+class BaseModel:
+    """A base class for all hbnb models
 
-    name = Column(String(128), nullable=False)
-    place_amenities = relationship("Place", secondary='place_amenity', viewonly=False)
-=======
-    """This is the class for Amenity
     Attributes:
-        name: input name
+        id (sqlalchemy String): The BaseModel id.
+        created_at (sqlalchemy DateTime): The datetime at creation.
+        updated_at (sqlalchemy DateTime): The datetime of last update.
     """
-    __tablename__ = "amenities"
-    name = Column(String(128), nullable=False)
-    place_amenities = relationship("Place", secondary=place_amenity)
->>>>>>> parent of 06df725 (models)
+    id = Column(String(60),
+                nullable=False,
+                primary_key=True,
+                unique=True)
+    created_at = Column(DATETIME,
+                        nullable=False,
+                        default=datetime.utcnow())
+    updated_at = Column(DATETIME,
+                        nullable=False,
+                        default=datetime.utcnow())
+
+    def _init_(self, *args, **kwargs):
+        """Instatntiates a new model"""
+        if not kwargs:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+        else:
+            for k in kwargs:
+                if k in ['created_at', 'updated_at']:
+                    setattr(self, k, datetime.fromisoformat(kwargs[k]))
+                elif k != '_class_':
+                    setattr(self, k, kwargs[k])
+            if storage_type == 'db':
+                if not hasattr(kwargs, 'id'):
+                    setattr(self, 'id', str(uuid.uuid4()))
+                if not hasattr(kwargs, 'created_at'):
+                    setattr(self, 'created_at', datetime.now())
+                if not hasattr(kwargs, 'updated_at'):
+                    setattr(self, 'updated_at', datetime.now())
+
+    def _str_(self):
+        """Returns a string representation of the instance"""
+        return '[{}] ({}) {}'.format(
+            self._class.__name, self.id, self.__dict_)
+
+    def save(self):
+        """Updates updated_at with current time when instance is changed"""
+        from models import storage
+        self.updated_at = datetime.now()
+        storage.new(self)
+        storage.save()
+
+    def to_dict(self):
+        """Convert instance into dict format"""
+        dct = self._dict_.copy()
+        dct['_class'] = self.__class.__name_
+        for k in dct:
+            if type(dct[k]) is datetime:
+                dct[k] = dct[k].isoformat()
+        if '_sa_instance_state' in dct.keys():
+            del(dct['_sa_instance_state'])
+        return dct
+
+    def delete(self):
+        '''deletes the current instance from the storage'''
+        from models import storage
+        storage.delete(self)
