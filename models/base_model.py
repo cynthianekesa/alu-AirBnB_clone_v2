@@ -28,7 +28,7 @@ class BaseModel:
                         nullable=False,
                         default=datetime.utcnow())
 
-    def _init_(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
             self.id = str(uuid.uuid4())
@@ -38,7 +38,7 @@ class BaseModel:
             for k in kwargs:
                 if k in ['created_at', 'updated_at']:
                     setattr(self, k, datetime.fromisoformat(kwargs[k]))
-                elif k != '_class_':
+                elif k != '__class__':
                     setattr(self, k, kwargs[k])
             if storage_type == 'db':
                 if not hasattr(kwargs, 'id'):
@@ -48,10 +48,10 @@ class BaseModel:
                 if not hasattr(kwargs, 'updated_at'):
                     setattr(self, 'updated_at', datetime.now())
 
-    def _str_(self):
+    def __str__(self):
         """Returns a string representation of the instance"""
         return '[{}] ({}) {}'.format(
-            self._class.__name, self.id, self.__dict_)
+            self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -62,8 +62,8 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dct = self._dict_.copy()
-        dct['_class'] = self.__class.__name_
+        dct = self.__dict__.copy()
+        dct['__class__'] = self.__class__.__name__
         for k in dct:
             if type(dct[k]) is datetime:
                 dct[k] = dct[k].isoformat()
