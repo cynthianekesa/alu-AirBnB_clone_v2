@@ -8,9 +8,9 @@ import os
 class test_City(test_basemodel):
     """ tests for city """
 
-    def _init_(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """ init the test class"""
-        super()._init_(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.name = "City"
         self.value = City
 
@@ -26,4 +26,4 @@ class test_City(test_basemodel):
         new = self.value()
         self.assertEqual(type(new.name), str if
                          os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+                         type(None))
