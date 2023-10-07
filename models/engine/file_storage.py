@@ -12,7 +12,7 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
         if cls is None:
             return self.__objects
-        cls_name = cls._name_
+        cls_name = cls.__name__
         dct = {}
         for key in self.__objects.keys():
             if key.split('.')[0] == cls_name:
@@ -22,7 +22,7 @@ class FileStorage:
     def new(self, obj):
         """Adds new object to storage dictionary"""
         self.__objects.update(
-            {obj.to_dict()['_class_'] + '.' + obj.id: obj}
+            {obj.to_dict()['__class__'] + '.' + obj.id: obj}
             )
 
     def save(self):
@@ -54,7 +54,7 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                    self.all()[key] = classes[val['_class_']](**val)
+                    self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
 
@@ -64,10 +64,10 @@ class FileStorage:
         '''
         if obj is None:
             return
-        obj_key = obj.to_dict()['_class_'] + '.' + obj.id
+        obj_key = obj.to_dict()['__class__'] + '.' + obj.id
         if obj_key in self.__objects.keys():
             del self.__objects[obj_key]
 
     def close(self):
         """Call the reload method"""
-        self.reload()
+        self.reload()
