@@ -1,21 +1,14 @@
 #!/usr/bin/python3
-"""
-Module documentation
-"""
+""" State Module for HBNB project """
+from models.base_model import BaseModel, Base
+from models import storage_type
+from sqlalchemy import Column, String
 
-from models.base_model import BaseModel
 
-
-class Place(BaseModel):
-    """ Place Model """
-    city_id = ""
-    user_id = ""
-    name = ""
-    description = ""
-    number_rooms = 0
-    number_bathrooms = 0
-    max_guest = 0
-    price_by_night = 0
-    latitude = 0.0
-    longitude = 0.0
-    amenity_ids = []
+class Amenity(BaseModel, Base):
+    '''amenity class'''
+    __tablename__ = 'amenities'
+    if storage_type == 'db':
+        name = Column(String(128), nullable=False)
+    else:
+        name = ""
