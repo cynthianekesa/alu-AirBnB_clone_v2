@@ -1,36 +1,36 @@
 #!/usr/bin/python3
 """ """
-from tests.test_models.test_base_model import test_basemodel
+from models.place import Place
+from models.user import User
+from tests.test_models.test_base_model import TestBaseModel
 from models.review import Review
-import os
 
 
-class test_review(test_basemodel):
-    """ review test class"""
+class TestReview(TestBaseModel):
+    """Test for review """
 
-    def _init_(self, *args, **kwargs):
-        """ review class init"""
-        super()._init_(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        """ """
+        super().__init__(*args, **kwargs)
         self.name = "Review"
         self.value = Review
 
     def test_place_id(self):
-        """ testing review place_id attr"""
+        """ """
         new = self.value()
-        self.assertEqual(type(new.place_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        place = Place()
+        new.place_id = place.id
+        self.assertEqual(type(new.place_id), str)
 
     def test_user_id(self):
-        """ testing review user_id attr"""
+        """ """
         new = self.value()
-        self.assertEqual(type(new.user_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        user = User()
+        new.user_id = user.id
+        self.assertEqual(type(new.user_id), str)
 
     def test_text(self):
-        """ testing review text attr"""
+        """ """
         new = self.value()
-        self.assertEqual(type(new.text), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        new.text = ""
+        self.assertEqual(type(new.text), str)
