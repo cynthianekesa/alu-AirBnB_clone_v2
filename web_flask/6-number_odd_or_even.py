@@ -1,7 +1,5 @@
-#!/usr/bin/python3
-
-"""Script that starts a Flask web application"""
-from flask import Flask
+pt that starts a Flask web application"""
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -35,6 +33,18 @@ def text_route_python(text="is cool"):
 def num_route(n):
     """Comment"""
     return "{} is a number".format(n)
+
+
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def num_route_template(n):
+    """Comment"""
+    return render_template("5-number.html", number=n)
+
+
+@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
+def num_route_even_odd(n):
+    """Comment"""
+    return render_template("6-number_odd_or_even.html", num=n)
 
 
 if __name__ == '__main__':
